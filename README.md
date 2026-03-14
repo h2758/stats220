@@ -1,11 +1,11 @@
-# **stats220**
+# stats220
 
-- This is my repo for <em>STATS 220</em>. 
+- This is my repo for **STATS 220**. 
 
 ## A little about me:
 
 1. I am undertaking a degree in computer science
-2. I am taking STATS 220 because I heard that it was a fun course and I think it could be useful
+2. I am taking <em>STATS 220</em> because I heard that it was a fun course and I think it could be useful
 3. I am interested in learning about coding related to stats
 
 I made this with the help of the [STATS220 coursebook](https://www.stat-edu.cloud.edu.au/foo/docnamic/stats220_S126/).
