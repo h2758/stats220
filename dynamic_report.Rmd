@@ -34,6 +34,7 @@ The NYT Games' Connections puzzle is a puzzle that is solved by finding four gro
 ### Plots:
 ```{r}
 library(tidyverse)
+library(magick)
 
 logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQn3Ws29VdvufJUpnuFuptZ77C2azIcFiMMSy3vGaVJhW28OiEgAw8qosl6rthchoyrqyJeRWraTZF2/pub?output=csv") 
 
@@ -104,6 +105,13 @@ time_taken_plot <- ggplot(data = time_taken_sorted) +
 
 # print plot
 time_taken_plot
+
+# get Connections example image
+example_image1 <- image_read("https://static01.nyt.com/images/2023/08/27/multimedia/27-THE-MORNING-NL--02/27-THE-MORNING-NL--02-articleLarge-v2.jpg?quality=75&auto=webp&disable=upscale") %>%
+  image_scale(400)
+example_image2 <- image_read("https://static01.nyt.com/images/2023/08/25/admin/oakImage-1692973708926/oakImage-1692973708926-superJumbo.jpg") %>%
+  image_scale(400)
+
 ```
 
 ### Summary values:
@@ -112,3 +120,6 @@ The above graphs were generated using **`r total_number_of_responses`** data poi
 The average time taken to solve a puzzle was **`r average_time_taken`** seconds.
 
 The average *perceived* difficulty of a puzzle was **`r average_personal_difficulty`** whereas the average *actual* difficulty of a puzzle was **`r average_true_difficulty`**.
+
+### Example images of the game for your understanding:
+`r example_image2` `r example_image1`
