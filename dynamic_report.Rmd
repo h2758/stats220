@@ -29,7 +29,7 @@ p {
 
 ## How difficult is the New York Times Games' Connections puzzle?
 
-The NYT Games' Connections puzzle is a puzzle that is solved by finding four groups of related terms from a total pool of sixteen. The solved categories are colour coded by order of difficulty: yellow, green, blue, and purple. The difficulty of the puzzle varies day-to-day. In this report, I analyse data from my Connections puzzle solves.
+The NYT Games' Connections puzzle is a puzzle that is solved by finding four groups of related terms from a total pool of sixteen. The solved categories are colour coded by order of difficulty: yellow, green, blue, and purple. The difficulty of the puzzle varies from day to day. In this report, I analyse data from my Connections puzzle solves.
 
 ### Plots:
 ```{r}
