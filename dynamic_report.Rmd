@@ -1,0 +1,114 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+body {
+  background-color: #b3a7fe;
+  padding: 10px;
+}
+h2 {
+  font-family: "Fontspring Demo - Palo Slab Condensed", serif;
+  font-size: 5vw
+}
+h1, h3, h4, h5, h6 {
+  font-family: "Fontspring Demo - Palo Slab Condensed", serif;
+  font-size: 2vw;
+}
+p {
+ font-family: "Arial";
+ font-size: 1.5vw;
+}
+```
+
+## How difficult is the New York Times Games' Connections puzzle?
+
+The NYT Games' Connections puzzle is a puzzle that is solved by finding four groups of related terms from a total pool of sixteen. The solved categories are colour coded by order of difficulty: yellow, green, blue, and purple. The difficulty of the puzzle varies day-to-day. In this report, I analyse data from my Connections puzzle solves.
+
+### Plots:
+```{r}
+library(tidyverse)
+
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQn3Ws29VdvufJUpnuFuptZ77C2azIcFiMMSy3vGaVJhW28OiEgAw8qosl6rthchoyrqyJeRWraTZF2/pub?output=csv") 
+
+# rename variables for readability
+latest_data <- logged_data %>%
+  rename(timestamp = 1,
+         number_of_mistakes = 2,
+         first_category = 3,
+         personal_difficulty = 4,
+         true_difficulty = 5,
+         time_taken = 6)
+
+# summary values
+average_time_taken <- round(mean(latest_data$time_taken), 0)
+average_personal_difficulty <- round(mean(latest_data$personal_difficulty), 0)
+average_true_difficulty <- round(mean(latest_data$true_difficulty), 0)
+total_number_of_responses <- nrow(latest_data)
+
+# plot 1 (difficulty)
+difficulty_data <- latest_data %>%
+  select(personal_difficulty, true_difficulty)
+
+difficulty_data_sorted <- difficulty_data %>%
+  mutate(personal_difficulty = paste0("personal_difficulty=", personal_difficulty),
+         true_difficulty = paste0("true_difficulty=", true_difficulty)) %>%
+  mutate(combined_types_of_difficulties = paste(true_difficulty, personal_difficulty, sep = ",")) %>%
+  select(combined_types_of_difficulties) %>%
+  separate_rows(combined_types_of_difficulties, sep = ",") %>%
+  separate(combined_types_of_difficulties, into = c("difficulty_type", "difficulty_value"), sep= "=") %>%
+  mutate(difficulty_value = factor(difficulty_value, levels = c("1", "2", "3", "4", "5")))
+
+sorted_difficulty_plot <- ggplot(difficulty_data_sorted, aes(x = difficulty_value, fill = difficulty_type)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Was it really that difficult?",
+       subtitle = "Comparing the frequency of personal and true difficulty ratings of Connections puzzles",
+       x = "Difficulty rating",
+       y = "Number of solves",
+       fill = "Type") +
+  scale_fill_manual(values = c("personal_difficulty" = "#b1c4ef",
+                               "true_difficulty" = "#ba81c5")) +
+  theme(plot.title = element_text(family = "Fontspring Demo - Palo Slab Condensed"))
+
+# print plot
+sorted_difficulty_plot
+
+# plot 2 (time)
+time_taken_sorted <- latest_data %>%
+  mutate(
+    time_group = cut(
+      time_taken,
+      breaks = c(0, 30, 60, 90, 120, 150, 180, Inf),
+      labels = c("0-30", "31-60", "61-90", "91-120", "121-150", "151-180", "180+")
+    )
+  )
+
+time_taken_plot <- ggplot(data = time_taken_sorted) +
+  geom_bar(aes(x = time_group, fill = first_category)) +
+  labs(title = "How long does it take?",
+       subtitle = "Comparing the time taken to complete a Connections puzzle with the first category \nsolved",
+       x = "Time in seconds",
+       y = "Number of solves",
+       fill = "Categories") +
+  scale_fill_manual(values = c("Yellow" = "#f9df6e",
+                               "Green" = "#a0c45a",
+                               "Blue" = "#b1c4ef",
+                               "Purple" = "#ba81c5")) +
+  theme(plot.title = element_text(family = "Fontspring Demo - Palo Slab Condensed"))
+
+# print plot
+time_taken_plot
+```
+
+### Summary values:
+The above graphs were generated using **`r total_number_of_responses`** data points.
+
+The average time taken to solve a puzzle was **`r average_time_taken`** seconds.
+
+The average *perceived* difficulty of a puzzle was **`r average_personal_difficulty`** whereas the average *actual* difficulty of a puzzle was **`r average_true_difficulty`**.
