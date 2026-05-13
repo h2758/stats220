@@ -1,0 +1,95 @@
+---
+title: Habits of a NYT Games Puzzle Solver
+output: html_document
+---
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+```
+
+```{js}
+$(function() {
+  $(".level2").css('visibility', 'hidden');
+  $(".level2").first().css('visibility', 'visible');
+  $(".container-fluid").height($(".container-fluid").height() + 300);
+  $(window).on('scroll', function() {
+    $('h2').each(function() {
+      var h2Top = $(this).offset().top - $(window).scrollTop();
+      var windowHeight = $(window).height();
+      if (h2Top >= 0 && h2Top <= windowHeight / 2) {
+        $(this).parent('div').css('visibility', 'visible');
+      } else if (h2Top > windowHeight / 2) {
+        $(this).parent('div').css('visibility', 'hidden');
+      }
+    });
+  });
+})
+```
+
+```{css, echo=FALSE}
+.figcaption {
+  display: none;
+}
+
+body {
+  background-color: #b3a7fe;
+  padding: 10px;
+  color: black;
+}
+
+h1 {
+  font-family: "Fontspring Demo - Palo Slab Condensed", serif;
+  font-size: 2.5vw;
+}
+
+h2 {
+  font-family: "Fontspring Demo - Palo Slab Condensed", serif;
+  font-size: 3vw;
+}
+
+h3, h4, h5, h6 {
+  font-family: "Fontspring Demo - Palo Slab Condensed", serif;
+  font-size: 2vw;
+}
+
+p {
+  font-family: Arial, sans-serif;
+  font-size: 1.2vw;
+}
+```
+
+## How difficult is the New York Times Games' Connections puzzle?
+
+The NYT Games' Connections puzzle is a puzzle that is solved by finding four groups of related terms from a total pool of sixteen. The solved categories are colour coded by order of difficulty: yellow, green, blue, and purple. The difficulty of the puzzle varies from day to day. I play the Connections very often and am interested in finding any patterns in my play style. In this report, I analyse data from my Connections puzzle solves.
+
+## Thinking harder or hardly thinking?
+
+Sometimes I find myself solving a puzzle in less than 40 seconds, and other times I can spend more than 10 minutes trying to crack it. The below graph visualises my solving process in terms of thinking time and the rated difficulty of the puzzle. It can be seen that, generally, the more difficult the puzzle, the longer I take to solve it.
+
+![Bar graph illustrating the average solve time by puzzle difficulty level, showing that higher difficulty puzzles take generally longer to complete.](plot1.png)
+
+## Does it matter which category is solved first?
+
+In my experience, the green and yellow categories in Connections are easy to solve and all items within the cateogry have a direct relationship with eachother. Items in the blue category often have an indirect relationship and items in the purple category often have no relationship to each other except found through wordplay and manipulation of the item name. Sometimes I feel like the cateogry I solve first sets the tone for the rest of the puzzle. I analyse in the below graph the relationship between the first solved category and the number of mistakes I make before solving the entire puzzle. I found that on average, I made zero mistakes in the puzzle when solving the blue category first, and the most mistakes (2) when solving te purple category first.
+
+![Bar graph illustrating the relationship between average number of mistakes and first category solved. Blue category had 0 mistakes, yellow and green had 1, and purple had 2.](plot2.png)
+
+## Does my puzzle solving ability fluctuate throughout the day?
+
+My energy levels fluctuate throughout the day. I am most tired in the morning and most energised at noon and late at night. So I was curious to see if there is any relationship between the time taken to solve a puzzle and the time it was solved at. I observed that my worst performances were in the early morning right after waking up and early evening after finishing a day or school or work. My best performances were late night and at noon.
+
+![Line graph illustrating the relationship between the number of seconds required to solve a puzzle and the hour of day it was solved. There is a high point at 8 o'clock and two peaks at 16 o'clock and 21 o'clock.](plot3.png)
+```{r}
+library(magick)
+
+# get Connections example image
+example_image1 <- image_read("https://static01.nyt.com/images/2023/08/27/multimedia/27-THE-MORNING-NL--02/27-THE-MORNING-NL--02-articleLarge-v2.jpg?quality=75&auto=webp&disable=upscale") %>%
+  image_scale(400)
+example_image2 <- image_read("https://static01.nyt.com/images/2023/08/25/admin/oakImage-1692973708926/oakImage-1692973708926-superJumbo.jpg") %>%
+  image_scale(400)
+
+```
+### Example images of the game for your understanding:
+`r example_image2` `r example_image1`
